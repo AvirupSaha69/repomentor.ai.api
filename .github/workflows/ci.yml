@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Gitleaks Detect
         run: |
-          gitleaks detect --verbose --redact
+          gitleaks detect --verbose --redact --log-opts="origin/main..HEAD"
 
   # Job 2: Security, Quality, Score, Build, Codacy, and Testing
   build-and-test:
