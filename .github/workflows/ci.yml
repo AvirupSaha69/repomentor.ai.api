@@ -23,10 +23,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.VCS_TOKEN }}
+      - name: Install Gitleaks CLI
+        run: |
+          GITLEAKS_VERSION="8.18.2"
+          curl -sSLo gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          tar -zxf gitleaks.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+          rm gitleaks.tar.gz
+
+      - name: Run Gitleaks Detect
+        run: |
+          gitleaks detect --verbose --redact
 
   # Job 2: Security, Quality, Score, Build, Codacy, and Testing
   build-and-test:
