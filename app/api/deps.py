@@ -4,6 +4,7 @@ from app.core.database import get_database
 from app.services.mongodb import MongoDBService
 from app.services.github import GitHubService
 from app.services.gemini import GeminiService
+from app.services.user import UserService
 
 def get_github_service() -> GitHubService:
     """Dependency injector for GitHub API Service."""
@@ -18,3 +19,10 @@ def get_mongodb_service(
 ) -> MongoDBService:
     """Dependency injector for MongoDB Service."""
     return MongoDBService(db)
+
+def get_user_service(
+    db: AsyncIOMotorDatabase = Depends(get_database)
+) -> UserService:
+    """Dependency injector for UserService."""
+    return UserService(db)
+
