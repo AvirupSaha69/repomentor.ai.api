@@ -67,12 +67,14 @@ jobs:
         run: |
           pip-audit
 
-      - name: Agentic Readiness Check
-        uses: agent-next/agent-ready@v0.2
+      - name: Setup Node.js (for agentic readiness CLI tool)
+        uses: actions/setup-node@v4
         with:
-          path: .
-          # Ensures that the CI step fails if critical agent guidance files are missing
-          fail-on-missing: true
+          node-version: "20"
+
+      - name: Agentic Readiness Check
+        run: |
+          npx -y agent-ready check . --strict
 
       - name: Repo Score Check (pylint)
         run: |
