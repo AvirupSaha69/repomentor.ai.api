@@ -1,11 +1,20 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional, List, Dict, Any
+"""Pydantic model for storing repository analysis results."""
+
 from datetime import datetime
-from app.models.github import GitHubRepoResponse
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, Field
+
 from app.models.gemini import GeminiCodeReview
+from app.models.github import GitHubRepoResponse
+
 
 class RepositoryAnalysis(BaseModel):
-    id: Optional[str] = Field(None, alias="_id", description="MongoDB ObjectId representation")
+    """Model representing a complete repository analysis record."""
+
+    id: Optional[str] = Field(
+        None, alias="_id", description="MongoDB ObjectId representation"
+    )
     owner: str
     repo: str
     branch: str
@@ -27,15 +36,14 @@ class RepositoryAnalysis(BaseModel):
                     "description": "My first repository",
                     "url": "https://github.com/octocat/hello-world",
                     "stars": 1500,
-                    "forks": 300
+                    "forks": 300,
                 },
                 "review": {
                     "summary": "The repository is simple and clean.",
                     "overall_score": 9,
-                    "issues": []
+                    "issues": [],
                 },
-                "created_at": "2026-07-07T12:00:00Z"
+                "created_at": "2026-07-07T12:00:00Z",
             }
-        }
+        },
     )
-

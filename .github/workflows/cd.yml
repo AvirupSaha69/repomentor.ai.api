@@ -1,0 +1,35 @@
+name: Continuous Delivery
+
+on:
+  # Deploy ONLY on push events for main and stage branches
+  push:
+    branches:
+      - main
+      - stage
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    if: github.ref == 'refs/heads/stage'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Staging Environment
+        run: |
+          echo "Deploying branch ${{ github.ref_name }} to Staging Environment..."
+          # TODO: Insert actual cloud deployment CLI commands here (e.g. AWS, GCP, Azure, Render hooks)
+
+  deploy-production:
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Production Environment
+        run: |
+          echo "Deploying branch ${{ github.ref_name }} to Production Environment..."
+          # TODO: Insert actual cloud deployment CLI commands here (e.g. AWS, GCP, Azure, Render hooks)

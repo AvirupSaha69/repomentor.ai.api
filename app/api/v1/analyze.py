@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends, Query, HTTPException, status
-from typing import Optional
-from app.models.github import GitHubRepoRequest
-from app.models.analysis import RepositoryAnalysis
-from app.services.github import GitHubService
-from app.services.gemini import GeminiService
-from app.services.mongodb import MongoDBService
-from app.api.deps import get_github_service, get_gemini_service, get_mongodb_service
+"""API routes for repository analysis endpoints."""
 from datetime import datetime
-import json
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Query, HTTPException, status
+
+from app.api.deps import get_github_service, get_gemini_service, get_mongodb_service
+from app.models.analysis import RepositoryAnalysis
+from app.models.github import GitHubRepoRequest
+from app.services.gemini import GeminiService
+from app.services.github import GitHubService
+from app.services.mongodb import MongoDBService
 
 
 router = APIRouter()
@@ -29,25 +31,25 @@ async def analyze_repository(
     try:
         # 1. Fetch metadata
         repo_info = await github_service.get_repository_info(request.owner, request.repo)
-        
+
         branch = request.branch or repo_info.default_branch
-        
+
         # 2. Fetch root contents to understand the structure
         contents = await github_service.get_repository_contents(
             request.owner, request.repo, path="", branch=branch
         )
-        
+
         # Build structure outline
-        structure_outline = "\n".join([f"- {item.path} ({item.type})" for item in contents])
-        
+        structure_outline = "\n".join(
+            [f"- {item.path} ({item.type})" for item in contents]
+        )
+
         # 3. Analyze the structure/files with Gemini
-        # For prototype simplicity, we analyze the structure outline.
-        # In a fully developed feature, we would recursively fetch files or search for key files like main.py/README.md.
         review = await gemini_service.analyze_code(
             code_content=f"Directory Structure Outline:\n{structure_outline}",
             file_path="Repository Root"
         )
-        
+
         # 4. Formulate DB Analysis Document
         analysis = RepositoryAnalysis(
             owner=request.owner.lower(),
@@ -57,18 +59,18 @@ async def analyze_repository(
             review=review,
             created_at=datetime.utcnow()
         )
-        
+
         # 5. Save to Database
         inserted_id = await mongodb_service.save_analysis(analysis)
         analysis.id = inserted_id
-        
+
         return analysis
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Repository analysis failed: {str(e)}"
-        )
+        ) from e
 
 @router.get("/latest", response_model=RepositoryAnalysis)
 async def get_latest_repo_analysis(
@@ -84,7 +86,7 @@ async def get_latest_repo_analysis(
         if not branch:
             repo_info = await github_service.get_repository_info(owner, repo)
             branch = repo_info.default_branch
-            
+
         latest = await mongodb_service.get_latest_analysis(owner, repo, branch)
         if not latest:
             raise HTTPException(
@@ -92,10 +94,10 @@ async def get_latest_repo_analysis(
                 detail=f"No analysis found for repository {owner}/{repo} on branch {branch}"
             )
         return latest
-    except HTTPException as he:
-        raise he
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Retrieving analysis failed: {str(e)}"
-        )
+        ) from e

@@ -1,4 +1,6 @@
+"""V1 API router aggregating all sub-routers."""
 from fastapi import APIRouter
+
 from app.api.v1 import github, gemini, analyze
 
 api_router = APIRouter()

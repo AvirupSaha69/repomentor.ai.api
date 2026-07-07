@@ -1,7 +1,9 @@
+"""API routes for direct Gemini AI prompt endpoints."""
 from fastapi import APIRouter, Depends, HTTPException, status
+
+from app.api.deps import get_gemini_service
 from app.models.gemini import GeminiPromptRequest, GeminiResponse
 from app.services.gemini import GeminiService
-from app.api.deps import get_gemini_service
 
 router = APIRouter()
 
@@ -20,4 +22,4 @@ async def prompt_gemini(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Gemini generation failed: {str(e)}"
-        )
+        ) from e

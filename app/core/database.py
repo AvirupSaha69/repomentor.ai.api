@@ -1,10 +1,16 @@
+"""MongoDB database connection management and lifecycle utilities."""
 import logging
+
 from motor.motor_asyncio import AsyncIOMotorClient
+
 from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-class Database:
+
+class Database:  # pylint: disable=too-few-public-methods
+    """Holds the MongoDB client and database instance references."""
+
     client: AsyncIOMotorClient = None
     db = None
 
