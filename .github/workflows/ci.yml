@@ -101,6 +101,7 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           upload: true
+          max-allowed-issues: 0
 
       - name: Run Pytest
         env:
