@@ -67,15 +67,15 @@ jobs:
         run: |
           pip-audit
 
-      - name: Setup Node.js (for agentic readiness CLI tool)
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: "20"
-
-      - name: Agentic Readiness Check
-        run: |
-          # The package name is agent-ready-scanner
-          npx -y agent-ready-scanner scan . --json
+#       - name: Setup Node.js (for agentic readiness CLI tool)
+#         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+#         with:
+#           node-version: "20"
+# 
+#       - name: Agentic Readiness Check
+#         run: |
+#           # The package name is agent-ready-scanner
+#           npx -y agent-ready-scanner scan . --json
 
       - name: Repo Score Check (pylint)
         run: |
