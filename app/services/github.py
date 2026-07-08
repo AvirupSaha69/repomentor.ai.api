@@ -4,14 +4,39 @@ from app.config import settings
 from app.models.github import GitHubRepoResponse, GitHubFileItem
 
 class GitHubService:
-    def __init__(self):
+    def __init__(self, token: Optional[str] = None):
         self.base_url = "https://api.github.com"
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "RepoMentor-API"
         }
-        if settings.GITHUB_TOKEN:
-            self.headers["Authorization"] = f"token {settings.GITHUB_TOKEN}"
+        active_token = token or settings.GITHUB_TOKEN
+        if active_token:
+            self.headers["Authorization"] = f"token {active_token}"
+
+    async def exchange_oauth_code(self, code: str) -> str:
+        """Exchange GitHub OAuth code for an access token."""
+        url = "https://github.com/login/oauth/access_token"
+        payload = {
+            "client_id": settings.GITHUB_CLIENT_ID,
+            "client_secret": settings.GITHUB_CLIENT_SECRET,
+            "code": code
+        }
+        headers = {"Accept": "application/json"}
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            if "error" in data:
+                raise ValueError(data.get("error_description", "Failed to exchange code"))
+            return data["access_token"]
+
+    async def get_authenticated_user_profile(self) -> Dict[str, Any]:
+        """Fetch the authenticated user's profile from GitHub."""
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{self.base_url}/user", headers=self.headers)
+            response.raise_for_status()
+            return response.json()
 
     async def get_repository_info(self, owner: str, repo: str) -> GitHubRepoResponse:
         """Fetch metadata for a given GitHub repository."""

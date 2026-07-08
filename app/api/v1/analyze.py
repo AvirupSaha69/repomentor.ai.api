@@ -5,7 +5,7 @@ from app.models.analysis import RepositoryAnalysis
 from app.services.github import GitHubService
 from app.services.gemini import GeminiService
 from app.services.mongodb import MongoDBService
-from app.api.deps import get_github_service, get_gemini_service, get_mongodb_service
+from app.api.deps import get_user_github_service, get_gemini_service, get_mongodb_service
 from datetime import datetime
 import json
 
@@ -15,7 +15,7 @@ router = APIRouter()
 @router.post("/repo", response_model=RepositoryAnalysis)
 async def analyze_repository(
     request: GitHubRepoRequest,
-    github_service: GitHubService = Depends(get_github_service),
+    github_service: GitHubService = Depends(get_user_github_service),
     gemini_service: GeminiService = Depends(get_gemini_service),
     mongodb_service: MongoDBService = Depends(get_mongodb_service)
 ):
@@ -75,7 +75,7 @@ async def get_latest_repo_analysis(
     owner: str = Query(..., description="Repository owner"),
     repo: str = Query(..., description="Repository name"),
     branch: Optional[str] = Query(None, description="Repository branch"),
-    github_service: GitHubService = Depends(get_github_service),
+    github_service: GitHubService = Depends(get_user_github_service),
     mongodb_service: MongoDBService = Depends(get_mongodb_service)
 ):
     """Retrieves the latest completed analysis for a given repository."""
