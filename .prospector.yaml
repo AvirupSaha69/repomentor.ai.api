@@ -1,0 +1,11 @@
+strictness: high
+doc-warnings: true
+test-warnings: false
+
+pyright:
+  run: false
+
+pydocstyle:
+  disable:
+    - D203
+    - D213

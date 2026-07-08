@@ -1,0 +1,41 @@
+name: Continuous Delivery
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+    branches:
+      - main
+      - stage
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'stage'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Deploy to Staging Environment
+        run: |
+          echo "Deploying branch ${{ github.event.workflow_run.head_branch }} to Staging Environment..."
+          # TODO: Insert actual cloud deployment CLI commands here (e.g. AWS, GCP, Azure, Render hooks)
+
+  deploy-production:
+    name: Deploy to Production
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Deploy to Production Environment
+        run: |
+          echo "Deploying branch ${{ github.event.workflow_run.head_branch }} to Production Environment..."
+          # TODO: Insert actual cloud deployment CLI commands here (e.g. AWS, GCP, Azure, Render hooks)

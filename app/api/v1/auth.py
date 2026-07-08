@@ -1,10 +1,14 @@
+"""API routes for user registration and sign-in authentication endpoints."""
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.models.user import UserRegister, UserLogin, UserResponse, Token
-from app.services.user import UserService
+
 from app.api.deps import get_user_service
 from app.core.security import create_access_token
+from app.models.user import UserRegister, UserLogin, UserResponse, Token
+from app.services.user import UserService
+
 
 router = APIRouter()
+
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(
@@ -20,6 +24,7 @@ async def register_user(
         )
     created_user = await user_service.create(user_in)
     return created_user
+
 
 @router.post("/signin", response_model=Token)
 async def signin_user(

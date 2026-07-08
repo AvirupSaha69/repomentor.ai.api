@@ -1,11 +1,18 @@
-from typing import Optional, Dict, Any
-from motor.motor_asyncio import AsyncIOMotorDatabase
-from app.models.user import UserRegister
-from app.core.security import get_password_hash, verify_password
+"""Service module for user CRUD operations and authentication checks."""
 from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
+from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from app.core.security import get_password_hash, verify_password
+from app.models.user import UserRegister
+
 
 class UserService:
+    """Provides methods for user management and authentication in MongoDB."""
+
     def __init__(self, db: AsyncIOMotorDatabase):
+        """Initialize the UserService with MongoDB database instance."""
         self.db = db
         self.collection = db["users"]
 
@@ -20,14 +27,14 @@ class UserService:
     async def create(self, user_in: UserRegister) -> Dict[str, Any]:
         """Create a new user with hashed password and save to MongoDB."""
         hashed_password = get_password_hash(user_in.password)
-        
+
         user_dict = {
             "email": user_in.email.lower(),
             "full_name": user_in.full_name,
             "hashed_password": hashed_password,
             "created_at": datetime.now(timezone.utc)
         }
-        
+
         result = await self.collection.insert_one(user_dict)
         user_dict["_id"] = str(result.inserted_id)
         # Remove hashed_password from returned dictionary for safety

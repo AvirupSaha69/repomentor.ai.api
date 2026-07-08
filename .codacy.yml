@@ -1,0 +1,15 @@
+---
+exclude_paths:
+  - "tests/**"
+  - "**/__init__.py"
+  - "*.md"
+  - "**/*.md"
+  - "requirements.txt"
+engines:
+  prospector:
+    exclude_paths:
+      - "tests/**"
+      - "requirements.txt"
+    options:
+      pyright:
+        enabled: false

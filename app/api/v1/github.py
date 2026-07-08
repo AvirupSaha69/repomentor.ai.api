@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Depends, Query, HTTPException, status
+"""API routes for GitHub repository data endpoints."""
 from typing import List, Optional
+
+from fastapi import APIRouter, Depends, Query, HTTPException, status
+
+from app.api.deps import get_github_service
 from app.models.github import GitHubRepoResponse, GitHubFileItem
 from app.services.github import GitHubService
-from app.api.deps import get_github_service
 
 router = APIRouter()
+
 
 @router.get("/repo", response_model=GitHubRepoResponse)
 async def get_repo_details(
@@ -19,7 +23,8 @@ async def get_repo_details(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Failed to fetch repository: {str(e)}"
-        )
+        ) from e
+
 
 @router.get("/contents", response_model=List[GitHubFileItem])
 async def get_repo_contents(
@@ -36,4 +41,4 @@ async def get_repo_contents(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Failed to fetch contents: {str(e)}"
-        )
+        ) from e

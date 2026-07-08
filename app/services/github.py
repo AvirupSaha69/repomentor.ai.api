@@ -1,10 +1,18 @@
-from typing import List, Dict, Any, Optional
+"""Service module for interacting with the GitHub REST API."""
+
+from typing import List, Optional
+
 import httpx
+
 from app.config import settings
 from app.models.github import GitHubRepoResponse, GitHubFileItem
 
+
 class GitHubService:
+    """Provides methods to fetch repository info, contents, and file data from GitHub."""
+
     def __init__(self):
+        """Initialize the GitHub API service."""
         self.base_url = "https://api.github.com"
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
@@ -22,7 +30,7 @@ class GitHubService:
             )
             response.raise_for_status()
             data = response.json()
-            
+
             return GitHubRepoResponse(
                 owner=owner,
                 repo=repo,
@@ -49,11 +57,11 @@ class GitHubService:
             )
             response.raise_for_status()
             data = response.json()
-            
+
             # GitHub API can return a list or dict depending on whether path is directory or file
             if not isinstance(data, list):
                 data = [data]
-                
+
             return [
                 GitHubFileItem(
                     path=item["path"],
