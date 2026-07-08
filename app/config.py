@@ -1,5 +1,6 @@
 import os
 from typing import Optional
+from pydantic import Field, AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -13,7 +14,12 @@ class Settings(BaseSettings):
     MONGODB_DB_NAME: str = "repomentor"
     
     # External API Tokens/Keys
-    GITHUB_TOKEN: Optional[str] = None
+    GITHUB_TOKEN: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("GITHUB_TOKEN", "GITHUB_PAT_TOKEN", "GITHUB _PAT_TOKEN")
+    )
+    GITHUB_CLIENT_ID: Optional[str] = None
+    GITHUB_CLIENT_SECRET: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
 
     # JWT Authentication Configuration
