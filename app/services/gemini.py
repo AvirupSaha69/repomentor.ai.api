@@ -24,7 +24,7 @@ class GeminiService:
         else:
             self.client = genai.Client()
         # Default model for developer / coding tasks
-        self.model = "gemini-2.5-flash"
+        self.model = settings.GEMINI_MODEL_NAME
 
     async def generate_text(
         self, prompt: str, content: Optional[str] = None
@@ -44,7 +44,7 @@ class GeminiService:
             )
         except Exception as e:
             logger.error("Error calling Gemini API: %s", str(e))
-            raise e from e
+            raise
 
     async def analyze_code(
         self, code_content: str, file_path: str
@@ -79,4 +79,37 @@ class GeminiService:
             logger.error(
                 "Error performing code review with Gemini: %s", str(e)
             )
-            raise e from e
+            raise
+
+    async def analyze_repository_structure(
+        self, structure_outline: str
+    ) -> GeminiCodeReview:
+        """Analyze repository directory structure and provide a structural review."""
+        prompt = (
+            "Please perform a detailed structural review of the following "
+            "repository directory listing. Evaluate the project organization, "
+            "identify missing best-practice files (e.g., README, LICENSE, "
+            ".gitignore, CI configs, tests), assess the naming conventions, "
+            "and suggest improvements. Provide severity levels, descriptions, "
+            "and suggestions. Finally, evaluate the overall structure and "
+            "provide a score from 1 (poor) to 10 (excellent)."
+        )
+
+        try:
+            response = await self.client.aio.models.generate_content(
+                model=self.model,
+                contents=[prompt, structure_outline],
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=GeminiCodeReview,
+                    temperature=0.2
+                )
+            )
+            review_json = response.text
+            return GeminiCodeReview.model_validate_json(review_json)
+
+        except Exception as e:
+            logger.error(
+                "Error performing structure review with Gemini: %s", str(e)
+            )
+            raise

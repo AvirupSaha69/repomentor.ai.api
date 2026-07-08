@@ -45,9 +45,8 @@ async def analyze_repository(
         )
 
         # 3. Analyze the structure/files with Gemini
-        review = await gemini_service.analyze_code(
-            code_content=f"Directory Structure Outline:\n{structure_outline}",
-            file_path="Repository Root"
+        review = await gemini_service.analyze_repository_structure(
+            structure_outline=f"Directory Structure Outline:\n{structure_outline}"
         )
 
         # 4. Formulate DB Analysis Document

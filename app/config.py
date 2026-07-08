@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     """Global application settings with defaults and .env overrides."""
 
     # API Server Configurations
-    HOST: str = "0.0.0.0"
+    HOST: str = "127.0.0.1"
     PORT: int = 8000
     DEBUG: bool = True
 
@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     # External API Tokens/Keys
     GITHUB_TOKEN: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
+    GEMINI_MODEL_NAME: str = "gemini-2.5-flash"
 
     # Load from .env file if it exists
     model_config = SettingsConfigDict(

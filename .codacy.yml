@@ -1,0 +1,11 @@
+---
+exclude_paths:
+  - "tests/**"
+  - "**/__init__.py"
+engines:
+  prospector:
+    exclude_paths:
+      - "tests/**"
+    options:
+      pyright:
+        enabled: false

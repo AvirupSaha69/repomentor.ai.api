@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 
 class GitHubRepoRequest(BaseModel):
+
     """Request model for specifying a GitHub repository to analyze."""
 
     owner: str = Field(..., description="The owner of the GitHub repository")
