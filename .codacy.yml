@@ -2,6 +2,7 @@
 exclude_paths:
   - "tests/**"
   - "**/__init__.py"
+  - "**/*.md"
 engines:
   prospector:
     exclude_paths:
