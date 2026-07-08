@@ -7,6 +7,7 @@ from app.services.gemini import GeminiService
 
 router = APIRouter()
 
+
 @router.post("/prompt", response_model=GeminiResponse)
 async def prompt_gemini(
     request: GeminiPromptRequest,

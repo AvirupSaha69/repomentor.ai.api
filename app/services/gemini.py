@@ -16,6 +16,7 @@ class GeminiService:
     """Provides methods to generate text and perform code reviews using Gemini."""
 
     def __init__(self):
+        """Initialize the Gemini service."""
         # The new Google GenAI SDK automatically grabs the GEMINI_API_KEY environment variable.
         # We can also supply it explicitly if configured in our settings object.
         api_key = settings.GEMINI_API_KEY

@@ -9,6 +9,7 @@ from app.services.github import GitHubService
 
 router = APIRouter()
 
+
 @router.get("/repo", response_model=GitHubRepoResponse)
 async def get_repo_details(
     owner: str = Query(..., description="Repository owner"),
@@ -23,6 +24,7 @@ async def get_repo_details(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Failed to fetch repository: {str(e)}"
         ) from e
+
 
 @router.get("/contents", response_model=List[GitHubFileItem])
 async def get_repo_contents(

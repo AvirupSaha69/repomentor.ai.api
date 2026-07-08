@@ -14,6 +14,7 @@ from app.services.mongodb import MongoDBService
 
 router = APIRouter()
 
+
 @router.post("/repo", response_model=RepositoryAnalysis)
 async def analyze_repository(
     request: GitHubRepoRequest,
@@ -21,8 +22,8 @@ async def analyze_repository(
     gemini_service: GeminiService = Depends(get_gemini_service),
     mongodb_service: MongoDBService = Depends(get_mongodb_service)
 ):
-    """
-    Analyzes a GitHub repository:
+    """Analyze a GitHub repository and save results.
+
     1. Fetches repository metadata.
     2. Downloads structure or main codebase files.
     3. Prompts Gemini for a code quality / structure review.
@@ -70,6 +71,7 @@ async def analyze_repository(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Repository analysis failed: {str(e)}"
         ) from e
+
 
 @router.get("/latest", response_model=RepositoryAnalysis)
 async def get_latest_repo_analysis(

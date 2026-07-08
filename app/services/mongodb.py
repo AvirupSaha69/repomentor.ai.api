@@ -11,6 +11,7 @@ class MongoDBService:
     """Provides CRUD operations for repository analyses stored in MongoDB."""
 
     def __init__(self, db: AsyncIOMotorDatabase):
+        """Initialize the MongoDB service."""
         self.db = db
         self.collection = db["repo_analyses"]
 

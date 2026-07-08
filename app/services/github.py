@@ -12,6 +12,7 @@ class GitHubService:
     """Provides methods to fetch repository info, contents, and file data from GitHub."""
 
     def __init__(self):
+        """Initialize the GitHub API service."""
         self.base_url = "https://api.github.com"
         self.headers = {
             "Accept": "application/vnd.github.v3+json",

@@ -14,7 +14,9 @@ class Database:  # pylint: disable=too-few-public-methods
     client: AsyncIOMotorClient = None
     db = None
 
+
 db_instance = Database()
+
 
 async def connect_to_mongo():
     """Create database connection."""
@@ -23,12 +25,14 @@ async def connect_to_mongo():
     db_instance.db = db_instance.client[settings.MONGODB_DB_NAME]
     logger.info("Successfully connected to MongoDB.")
 
+
 async def close_mongo_connection():
     """Close database connection."""
     if db_instance.client:
         logger.info("Closing MongoDB connection...")
         db_instance.client.close()
         logger.info("MongoDB connection closed.")
+
 
 def get_database():
     """Dependency provider for database instance."""

@@ -19,10 +19,11 @@ async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
 
 app = FastAPI(
     title="RepoMentor API",
-    description="Python API integrating MongoDB, GitHub API, and Gemini API for codebase analysis.",
+    description="FastAPI service for repository structure and codebase reviews.",
     version="1.0.0",
     lifespan=lifespan
 )
+
 
 # Root / health endpoint
 @app.get("/health", tags=["System"])
