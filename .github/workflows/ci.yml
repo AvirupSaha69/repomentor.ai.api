@@ -96,7 +96,13 @@ jobs:
             echo "No Dockerfile found. Skipping image build check."
           fi
 
-
+      - name: Codacy Code Quality Analysis
+        uses: codacy/codacy-analysis-cli-action@v4
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          upload: true
+          max-allowed-issues: 20
+        continue-on-error: true # Allow tests to pass even if Codacy API token is missing in initial forks
 
       - name: Run Pytest
         env:
