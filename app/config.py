@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: Optional[str] = None
     GEMINI_MODEL_NAME: str = "gemini-2.5-flash"
 
+    # JWT Authentication Configuration
+    JWT_SECRET_KEY: str = "default_secret_key_change_me_in_production"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
     # Load from .env file if it exists
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -11,3 +11,8 @@ python-dotenv>=1.2.2
 # Testing
 pytest>=9.0.3
 pytest-asyncio>=0.23.5
+
+# Security and Authentication
+bcrypt>=4.1.2
+pyjwt>=2.8.0
+
