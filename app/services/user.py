@@ -9,7 +9,6 @@ from app.models.user import UserRegister
 
 
 class UserService:
-
     """Provides methods for user management and authentication in MongoDB."""
 
     def __init__(self, db: AsyncIOMotorDatabase):
